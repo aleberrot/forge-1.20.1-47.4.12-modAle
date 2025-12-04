@@ -1,6 +1,9 @@
 package net.aleberrot.paconimod;
 
 import com.mojang.logging.LogUtils;
+import net.aleberrot.paconimod.effect.ModEffects;
+import net.aleberrot.paconimod.item.ModItems;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -27,6 +30,11 @@ public class PaconiMod
     {
         IEventBus modEventBus = context.getModEventBus();
 
+        // add effects
+        ModEffects.register(modEventBus);
+
+        // add items
+        ModItems.register(modEventBus);
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
 
@@ -45,7 +53,15 @@ public class PaconiMod
     // Add the example block item to the building blocks tab
     private void addCreative(BuildCreativeModeTabContentsEvent event)
     {
-
+        // method to add items to vanilla tabs and not to custom ones
+        if(event.getTabKey() == CreativeModeTabs.INGREDIENTS){
+            event.accept(ModItems.SAPPHIRE);
+            event.accept(ModItems.RAW_SAPPHIRE);
+            event.accept(ModItems.STAND_ARROW);
+        }
+        else if (event.getTabKey() == CreativeModeTabs.COMBAT){
+            event.accept(ModItems.NAIL);
+        }
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
